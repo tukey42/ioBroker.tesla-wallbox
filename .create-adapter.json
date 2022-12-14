@@ -1,0 +1,43 @@
+{
+    "cli": true,
+    "target": "directory",
+    "adapterName": "tesla-wallbox",
+    "title": "Tesla Wallbox",
+    "description": "Get usage data from Tesla wallbox",
+    "keywords": [
+        "tesla",
+        "wallbox"
+    ],
+    "expert": "no",
+    "features": [
+        "adapter"
+    ],
+    "adminFeatures": [],
+    "type": "vehicle",
+    "startMode": "daemon",
+    "connectionType": "local",
+    "dataSource": "poll",
+    "connectionIndicator": "no",
+    "language": "JavaScript",
+    "nodeVersion": "14",
+    "adminUi": "json",
+    "tools": [
+        "ESLint",
+        "type checking"
+    ],
+    "releaseScript": "yes",
+    "devServer": "yes",
+    "devServerPort": 8081,
+    "indentation": "Space (4)",
+    "quotes": "single",
+    "es6class": "yes",
+    "authorName": "Stefan Köhler",
+    "authorGithub": "tukey42",
+    "authorEmail": "tukey42@t-online.de",
+    "gitRemoteProtocol": "HTTPS",
+    "gitCommit": "no",
+    "defaultBranch": "main",
+    "license": "MIT License",
+    "dependabot": "yes",
+    "creatorVersion": "2.3.0"
+}

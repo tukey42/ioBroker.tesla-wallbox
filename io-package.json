@@ -1,0 +1,84 @@
+{
+    "common": {
+        "name": "tesla-wallbox",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Tesla Wallbox",
+        "titleLang": {
+            "en": "Tesla Wallbox",
+            "de": "Tesla-Wallbox",
+            "ru": "Настенная коробка Тесла",
+            "pt": "Tesla Wallbox",
+            "nl": "Tesla Wallbox",
+            "fr": "Boîte murale Tesla",
+            "it": "Scatola da parete Tesla",
+            "es": "Caja de empotrar Tesla",
+            "pl": "Wallbox Tesli",
+            "zh-cn": "特斯拉墙盒"
+        },
+        "desc": {
+            "en": "Get usage data from Tesla wallbox",
+            "de": "Rufen Sie Nutzungsdaten von der Tesla-Wallbox ab",
+            "ru": "Получить данные об использовании из настенного ящика Tesla",
+            "pt": "Obtenha dados de uso do Tesla wallbox",
+            "nl": "Krijg gebruiksgegevens van Tesla wallbox",
+            "fr": "Obtenir les données d'utilisation de la wallbox Tesla",
+            "it": "Ottieni i dati sull'utilizzo dalla wallbox Tesla",
+            "es": "Obtener datos de uso de Tesla wallbox",
+            "pl": "Uzyskaj dane użytkowania ze stacji ładowania Tesla",
+            "zh-cn": "从 Tesla wallbox 获取使用数据"
+        },
+        "authors": [
+            "Stefan Köhler <tukey42@t-online.de>"
+        ],
+        "keywords": [
+            "tesla",
+            "wallbox"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "tesla-wallbox.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/tukey42/ioBroker.tesla-wallbox/main/admin/tesla-wallbox.png",
+        "readme": "https://github.com/tukey42/ioBroker.tesla-wallbox/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "vehicle",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=3.3.22"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": []
+}
