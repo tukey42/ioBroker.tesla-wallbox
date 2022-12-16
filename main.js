@@ -10,6 +10,16 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
+const { throws } = require('assert');
+const axios = require("axios");
+
+let wallboxapis = [
+    "vitals",
+    "wifi_status",
+    "version",
+    "lifetime"
+];
+
 
 class TeslaWallbox extends utils.Adapter {
 
@@ -26,6 +36,7 @@ class TeslaWallbox extends utils.Adapter {
         // this.on('objectChange', this.onObjectChange.bind(this));
         // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
+        this.updateInterval = null;
     }
 
     /**
@@ -34,55 +45,27 @@ class TeslaWallbox extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
 
-        // The adapters config (in the instance object everything under the attribute "native") is accessible via
-        // this.config:
-        this.log.info('config option1: ' + this.config.option1);
-        this.log.info('config option2: ' + this.config.option2);
-
-        /*
-        For every state in the system there has to be also an object of type state
-        Here a simple template for a boolean variable named "testVariable"
-        Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-        */
-        await this.setObjectNotExistsAsync('testVariable', {
-            type: 'state',
-            common: {
-                name: 'testVariable',
-                type: 'boolean',
-                role: 'indicator',
-                read: true,
-                write: true,
-            },
-            native: {},
+        if (!this.config.ipdaddress) {
+            this.log.error('Server IP address is empty - please check instance configuration');
+            return;
+        }
+        this.requestClient = axios.create({
+            baseURL: `http://${this.config.ipaddress}/api/1/`,
+            timeout: 5000
         });
 
-        // In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-        this.subscribeStates('testVariable');
-        // You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-        // this.subscribeStates('lights.*');
-        // Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-        // this.subscribeStates('*');
+        this.log.debug('Wallbox adapter - connection to ' + this.config.ipaddress);
+        this.setState('info.connection', false, true);
 
+        await this.readandcreateallstates(true);
+
+        this.log.info('All states read - terminate');
+        this.stop();
         /*
-            setState examples
-            you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
+        this.updateInterval = setInterval(async () => {
+            await this.readandcreateallstates(false);
+        }, 10 * 60 * 1000);   // config this.config.interval
         */
-        // the variable testVariable is set to true as command (ack=false)
-        await this.setStateAsync('testVariable', true);
-
-        // same thing, but the value is flagged "ack"
-        // ack should be always set to true if the value is received from or acknowledged from the target system
-        await this.setStateAsync('testVariable', { val: true, ack: true });
-
-        // same thing, but the state is deleted after 30s (getState will return null afterwards)
-        await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
-
-        // examples for the checkPassword/checkGroup functions
-        let result = await this.checkPasswordAsync('admin', 'iobroker');
-        this.log.info('check user admin pw iobroker: ' + result);
-
-        result = await this.checkGroupAsync('admin', 'admin');
-        this.log.info('check group user admin group admin: ' + result);
     }
 
     /**
@@ -90,6 +73,8 @@ class TeslaWallbox extends utils.Adapter {
      * @param {() => void} callback
      */
     onUnload(callback) {
+        this.log.info('onUnload called');
+        this.setState('info.connection', false, true);
         try {
             // Here you must clear all timeouts or intervals that may still be active
             // clearTimeout(timeout1);
@@ -102,23 +87,6 @@ class TeslaWallbox extends utils.Adapter {
             callback();
         }
     }
-
-    // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-    // You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-    // /**
-    //  * Is called if a subscribed object changes
-    //  * @param {string} id
-    //  * @param {ioBroker.Object | null | undefined} obj
-    //  */
-    // onObjectChange(id, obj) {
-    //     if (obj) {
-    //         // The object was changed
-    //         this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-    //     } else {
-    //         // The object was deleted
-    //         this.log.info(`object ${id} deleted`);
-    //     }
-    // }
 
     /**
      * Is called if a subscribed state changes
@@ -135,24 +103,112 @@ class TeslaWallbox extends utils.Adapter {
         }
     }
 
-    // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-    // /**
-    //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-    //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-    //  * @param {ioBroker.Message} obj
-    //  */
-    // onMessage(obj) {
-    //     if (typeof obj === 'object' && obj.message) {
-    //         if (obj.command === 'send') {
-    //             // e.g. send email or pushover or whatever
-    //             this.log.info('send command');
+    async readandcreateallstates(createflag) {
+        for (const api of wallboxapis) {
+            if (createflag) {
+                try {
+                    await this.setObjectNotExistsAsync(api, {
+                        type: 'channel',
+                        role: 'info',
+                        common: {
+                            name: api
+                        },
+                        native: {},
+                    });
+                    this.log.debug('Channel ' + api + ' created');
+                } catch(err) {
+                    this.log.error('Cannot create channel ' + api + ' (' + err + ')');
+                }
+            }
+            await this.readandcreatestates(api, createflag);
+        }
 
-    //             // Send response in callback if required
-    //             if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-    //         }
-    //     }
-    // }
+    }
 
+    async readandcreatestates(api, createflag) {
+        await this.requestClient.get(api)
+            .then(async (res) => {
+                this.log.debug('Got data from wallbox for ' + api);
+                this.log.debug(JSON.stringify(res.data));
+                this.setState('info.connection', true, true);
+
+                if (createflag) {
+                    this.log.info('Creating Objects for ' + api);
+                    for (const key in res.data) {
+                        const value = res.data[key];
+                        let vt = 'mixed';
+                        switch (typeof value) {
+                            case 'number':
+                                vt = 'number';
+                                break;
+                            case 'boolean':
+                                vt = 'boolean';
+                                break;
+                            case 'string':
+                                vt = 'string';
+                                break;
+                        }
+
+                        this.log.debug("Creating object '" + api + '.' + key + "'");
+
+                        try {
+                            await this.setObjectNotExistsAsync(api + '.' + key, {
+                                type: 'state',
+                                common: {
+                                    name: key,
+                                    role: 'value',
+                                    type: vt,
+                                    // @ts-ignore
+                                    read: true,
+                                    write: false
+                                },
+                                native: {},
+                            });
+                            this.log.debug('Object created: ' + api + '.' + key);
+                        } catch(err)  {
+                            this.log.error(err);
+                        }
+                    }
+                }
+
+                this.log.debug('Created all states, now setting values for ' + api);
+                const promises = [];
+
+                for (const key in res.data) {
+                    const value = res.data[key];
+
+                    promises.push(this.setStateAsync(api + '.' + key, (typeof value == 'object' ? JSON.stringify(value) : value), true));
+                }
+                Promise.all(promises)
+                    .then(result => {
+                        this.log.info('All States set: ' + result);
+                    })
+                    .catch(err => {
+                        this.log.error('Cannot set state: ' + err);
+
+                    });
+            })
+            .catch((error) => {
+                this.log.error(error);
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    this.log.error(JSON.stringify(error.response.data));
+                    this.log.error(JSON.stringify(error.response.status));
+                    this.log.error(JSON.stringify(error.response.headers));
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    this.log.error(JSON.stringify(error.request));
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    this.log.error(JSON.stringify(error.message));
+                }
+                this.log.error(JSON.stringify(error.config));
+            });
+        this.log.debug('Handled data got for ' + api);
+    }
 }
 
 if (require.main !== module) {

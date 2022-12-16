@@ -13,7 +13,8 @@
                 "it": "Versione iniziale",
                 "es": "Versión inicial",
                 "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版"
+                "zh-cn": "首次出版",
+                "uk": "початковий випуск"
             }
         },
         "title": "Tesla Wallbox",
@@ -27,7 +28,8 @@
             "it": "Scatola da parete Tesla",
             "es": "Caja de empotrar Tesla",
             "pl": "Wallbox Tesli",
-            "zh-cn": "特斯拉墙盒"
+            "zh-cn": "特斯拉墙盒",
+            "uk": "Tesla Wallbox"
         },
         "desc": {
             "en": "Get usage data from Tesla wallbox",
@@ -39,7 +41,8 @@
             "it": "Ottieni i dati sull'utilizzo dalla wallbox Tesla",
             "es": "Obtener datos de uso de Tesla wallbox",
             "pl": "Uzyskaj dane użytkowania ze stacji ładowania Tesla",
-            "zh-cn": "从 Tesla wallbox 获取使用数据"
+            "zh-cn": "从 Tesla wallbox 获取使用数据",
+            "uk": "Отримайте дані про використання від Tesla wallbox"
         },
         "authors": [
             "Stefan Köhler <tukey42@t-online.de>"
@@ -76,9 +79,42 @@
         ]
     },
     "native": {
-        "option1": true,
-        "option2": "42"
+        "ipaddress": ""
     },
     "objects": [],
-    "instanceObjects": []
+    "instanceObjects": [
+        {
+            "_id":  "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            }
+            "native": {}
+        },
+        {
+            "_id":  "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name":  {
+                    "en": "If connected to Tesla Wallbox",
+                    "de": "Wenn mit Tesla Wallbox verbunden",
+                    "ru": "При подключении к Tesla Wallbox",
+                    "pt": "Se conectado a Tesla Wallbox",
+                    "nl": "Als verbonden met Tesla Wallbox",
+                    "fr": "Si connecté à Tesla Wallbox",
+                    "it": "Se collegato a Tesla Wallbox",
+                    "es": "Si está conectado con Tesla Wallbox",
+                    "pl": "Połącz do Tesli Wallbox",
+                    "uk": "Якщо підключено до Tesla Wallbox",
+                    "zh-cn": "如果与Tsla隔离墙箱有关"
+                  },
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

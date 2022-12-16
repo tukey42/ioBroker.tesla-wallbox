@@ -1,5 +1,4 @@
 {
     "tesla-wallbox adapter settings": "Paramètres d'adaptateur pour tesla-wallbox",
-    "option1": "Option 1",
-    "option2": "Option 2"
+    "Domainname or IP Address of Wallbox": "Nom de domaine ou adresse IP de Wallbox"
 }

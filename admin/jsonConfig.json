@@ -2,14 +2,9 @@
     "i18n": true,
     "type": "panel",
     "items": {
-        "option1": {
-            "type": "checkbox",
-            "label": "option1",
-            "newLine": true
-        },
-        "option2": {
+        "ipaddress": {
             "type": "text",
-            "label": "option2",
+            "label": "Domainname or IP Address of Wallbox",
             "newLine": true
         }
     }
