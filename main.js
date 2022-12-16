@@ -45,7 +45,7 @@ class TeslaWallbox extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
 
-        if (!this.config.ipdaddress) {
+        if (!this.config.ipaddress) {
             this.log.error('Server IP address is empty - please check instance configuration');
             return;
         }
