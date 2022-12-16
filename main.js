@@ -10,14 +10,14 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
-const { throws } = require('assert');
-const axios = require("axios");
 
-let wallboxapis = [
-    "vitals",
-    "wifi_status",
-    "version",
-    "lifetime"
+const axios = require('axios');
+
+const wallboxapis = [
+    'vitals',
+    'wifi_status',
+    'version',
+    'lifetime'
 ];
 
 
