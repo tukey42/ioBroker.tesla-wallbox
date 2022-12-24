@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tesla-wallbox",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "actual no work in progress",
+        "de": "tatsächlich keine arbeit im laufenden",
+        "ru": "фактически нет работы в прогрессе",
+        "pt": "real nenhum trabalho em andamento",
+        "nl": "echt geen werk in vooruitgang",
+        "fr": "travaux en cours",
+        "it": "reale nessun lavoro in corso",
+        "es": "no hay trabajo en marcha",
+        "pl": "fakt nie działa w postępie",
+        "uk": "не працює",
+        "zh-cn": "实际没有工作"
+      },
       "0.1.0": {
         "en": "(Stefan Köhler) initial release",
         "de": "(Stefan Köhler) erste Veröffentlichung",

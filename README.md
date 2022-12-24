@@ -32,7 +32,7 @@ This adapter is provided as is. There is no waranty for anything when using this
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.1.1 (2022-12-24)
 * (tukey42) actual no work in progress
 
 ### 0.1.0 (2022-12-17)
