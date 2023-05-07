@@ -51,7 +51,7 @@ class TeslaWallbox extends utils.Adapter {
         }
         this.requestClient = axios.create({
             baseURL: `http://${this.config.ipaddress}/api/1/`,
-            timeout: 5000
+            timeout: 10000
         });
 
         this.log.debug('Wallbox adapter - connection to ' + this.config.ipaddress);
