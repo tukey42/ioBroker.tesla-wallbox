@@ -49,7 +49,7 @@ class TeslaWallbox extends utils.Adapter {
             this.log.error('Server IP address is empty - please check instance configuration');
             return;
         }
-        this.requestClient = axios.create({
+        this.requestClient = axios.default.create({
             baseURL: `http://${this.config.ipaddress}/api/1/`,
             timeout: 10000
         });
