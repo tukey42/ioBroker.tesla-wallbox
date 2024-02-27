@@ -11,8 +11,8 @@ const utils = require('@iobroker/adapter-core');
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
-const axios = require('axios');
-const axiosRetry = require('axios-retry');
+const axios = require('axios').default;
+const axiosRetry = require('axios-retry').default;
 
 
 const wallboxapis = [
@@ -51,7 +51,7 @@ class TeslaWallbox extends utils.Adapter {
             this.log.error('Server IP address is empty - please check instance configuration');
             return;
         }
-        this.requestClient = axios.default.create({
+        this.requestClient = axios.create({
             baseURL: `http://${this.config.ipaddress}/api/1/`,
             timeout: 10000
         });
