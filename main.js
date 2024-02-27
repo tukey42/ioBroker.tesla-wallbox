@@ -12,6 +12,8 @@ const utils = require('@iobroker/adapter-core');
 // const fs = require("fs");
 
 const axios = require('axios');
+const axiosRetry = require('axios-retry');
+
 
 const wallboxapis = [
     'vitals',
@@ -52,6 +54,18 @@ class TeslaWallbox extends utils.Adapter {
         this.requestClient = axios.default.create({
             baseURL: `http://${this.config.ipaddress}/api/1/`,
             timeout: 10000
+        });
+
+        axiosRetry(axios, {
+            retries: 3, // number of retries
+            retryDelay: (retryCount) => {
+                this.log.info(`Axios retry attempt: ${retryCount}`);
+                return retryCount * 2000; // time interval between retries
+            },
+            retryCondition: (error) => {
+                // if retry condition is not specified, by default idempotent requests are retried
+                return error.code === 'ECONNABORTED';
+            },
         });
 
         this.log.debug('Wallbox adapter - connection to ' + this.config.ipaddress);
@@ -189,7 +203,7 @@ class TeslaWallbox extends utils.Adapter {
                     });
             })
             .catch((error) => {
-                this.log.error(error);
+                this.log.error(`Axios request returns: ${error}`);
                 if (error.response) {
                     // The request was made and the server responded with a status code
                     // that falls out of the range of 2xx
@@ -200,12 +214,13 @@ class TeslaWallbox extends utils.Adapter {
                     // The request was made but no response was received
                     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                     // http.ClientRequest in node.js
-                    this.log.error(JSON.stringify(error.request));
+                    this.log.error(`Request failed for ${api}`);
+                    //this.log.error(JSON.stringify(error.request));
                 } else {
                     // Something happened in setting up the request that triggered an Error
                     this.log.error(JSON.stringify(error.message));
                 }
-                this.log.error(JSON.stringify(error.config));
+                this.log.debug(JSON.stringify(error.config));
             });
         this.log.debug('Handled data got for ' + api);
     }
