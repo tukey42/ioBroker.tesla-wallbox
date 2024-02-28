@@ -64,7 +64,8 @@ class TeslaWallbox extends utils.Adapter {
             },
             retryCondition: (error) => {
                 // if retry condition is not specified, by default idempotent requests are retried
-                return error.code === 'ECONNABORTED';
+                //return error.code === 'ECONNABORTED';
+                return true;
             },
         });
 
